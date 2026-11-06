@@ -1,0 +1,70 @@
+@baseUrl = https://localhost:7136
+@token = PASTE_USER_ACCESS_TOKEN_HERE
+@adminToken = PASTE_ADMIN_ACCESS_TOKEN_HERE
+
+### 1. Зарегистрировать обычного пользователя (200 / 409)
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "login": "student",
+  "password": "123456"
+}
+
+### 2. Войти обычным пользователем (200 + access_token / 401)
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "login": "student",
+  "password": "123456"
+}
+
+### 3. Войти администратором (200 + access_token)
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "login": "admin123",
+  "password": "P@s$w0rd"
+}
+
+### 4. Мои задачи (200 / 401)
+GET {{baseUrl}}/api/v1/tasks
+Authorization: Bearer {{token}}
+
+### 5. Создать задачу (201)
+POST {{baseUrl}}/api/v1/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Практическая №8",
+  "description": "Реализовать JWT"
+}
+
+### 6. Получить конкретную задачу (200 / 403 / 404)
+GET {{baseUrl}}/api/v1/tasks/1
+Authorization: Bearer {{token}}
+
+### 7. Обновить задачу (200 / 403 / 404)
+PUT {{baseUrl}}/api/v1/tasks/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Проверка API",
+  "description": "Проверить работу JWT",
+  "isCompleted": true
+}
+
+### 8. Получить все задачи — только Admin (200 / 403)
+GET {{baseUrl}}/api/v1/tasks/all
+Authorization: Bearer {{adminToken}}
+
+### 9. Удалить задачу (204 / 403 / 404)
+DELETE {{baseUrl}}/api/v1/tasks/1
+Authorization: Bearer {{token}}
+
+### 10. Проверить защиту без токена (401)
+GET {{baseUrl}}/api/v1/tasks
